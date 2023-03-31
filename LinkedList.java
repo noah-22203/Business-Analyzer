@@ -86,10 +86,10 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public Iterator<T> Iterator() {
-        return new LListIterator<>();
+        return new ListIterator<>();
     }
 
-    private class LListIterator<T> implements Iterator<T> {
+    private class ListIterator<T> implements Iterator<T> {
         private Node node = head;
 
         public boolean hasNext() {

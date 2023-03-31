@@ -4,6 +4,14 @@ public class Obj {
     private String hood;
     private String type;
     private boolean open;
+    private String sDate;
+
+    public void setsDate(String sDate) {
+        this.sDate = sDate;
+    }
+    public String getsDate() {
+        return sDate;
+    }
 
     public void setType(String type) {
         this.type = type;
@@ -46,7 +54,7 @@ public class Obj {
     }
 
     public String toString() {
-        return "(" + this.zip + "," + this.NAICS + "," + this.hood + "," + this.open + ")";
+        return "(" + this.zip + "," + this.NAICS + "," + this.hood + "," + this.open + "," + this.sDate + ")";
     }
 }
 

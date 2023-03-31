@@ -61,10 +61,10 @@ public class ArrayList<T> implements List<T> {
     }
     @Override
     public Iterator<T> Iterator() {
-        return new AListIterator<>();
+        return new ListIterator<>();
     }
 
-    private class AListIterator<T> implements Iterator<T> {
+    private class ListIterator<T> implements Iterator<T> {
         private int nextIndex = 0;
 
         public boolean hasNext () {
