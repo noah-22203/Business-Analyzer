@@ -1,3 +1,7 @@
+/**
+ * Assignment02-Business Analyzer
+ * @author Noah Steaderman
+ */
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,6 +11,11 @@ import java.util.Queue;
 import java.util.*;
 
 public class Assignment02 {
+    /** function reads in each line of the csv file, then creates an arraylist
+     * of objects to pass certain values into.
+     * @param MyFile string containing the entire csv file
+     * @return arraylist containing values from csv file
+     */
     public static ArrayList<Obj> ReadFileAL(String MyFile) {
         Path p2 = Path.of(MyFile); /* newer way */
         ArrayList<Obj> tags = new ArrayList<Obj>();
@@ -40,7 +49,11 @@ public class Assignment02 {
         }
         return tags;
     }
-
+    /** function reads in each line of the csv file, then creates a linkedlist
+     * of objects to pass certain values into.
+     * @param MyFile string containing the entire csv file
+     * @return linkedlist containing values from csv file
+     */
     public static LinkedList<Obj> ReadFileLL(String MyFile) {
         Path p2 = Path.of(MyFile); /* newer way */
         LinkedList<Obj> tags = new LinkedList<>();
@@ -50,6 +63,7 @@ public class Assignment02 {
             //String currentLine = null;
             System.out.println("Reading data file .....");
             //while there is content on the current line
+
             String currentLine = reader.readLine();
             while ((currentLine = reader.readLine()) != null) {
                 currentLine = currentLine.trim(); //adds line into a list
@@ -73,7 +87,11 @@ public class Assignment02 {
         }
         return tags;
     }
-
+    /** function that runs the user input in a while loop and executes all other functions.
+     * @param list
+     * @param queue
+     * @return false to end user input once EXIT is entered
+     */
     public static boolean UserIn(List<Obj> list, Deque<String> queue) {
         Scanner sc = new Scanner(System.in);
         String in = "";
@@ -108,7 +126,10 @@ public class Assignment02 {
         }
         return false;
     }
-
+    /** function searches through list based on a given NAICS code
+     * @param naics given naics code
+     * @param list given linkedlist or arraylist
+     */
     public static void naicsSum(String naics, List<Obj> list) {
         int count = 0;
         HashSet<String> zips = new HashSet<String>();
@@ -138,7 +159,10 @@ public class Assignment02 {
         System.out.println("Zip codes: " + zips.size());
         System.out.println("Neighborhood: " + hoods.size());
     }
-
+    /** function searches through list based on a given zip code
+     * @param zip given zip code
+     * @param list given linkedlist or arraylist
+     */
     public static void zipSum(String zip, List<Obj> list) {
         int count = 0;
         HashSet<String> types = new HashSet<String>();
@@ -157,7 +181,9 @@ public class Assignment02 {
         System.out.println("Business Types: " + types.size());
         System.out.println("Neighborhood: " + hoods.size());
     }
-
+    /** function searches through list to print total list values
+     * @param list given linkedlist or arraylist
+     */
     public static void sumSum(List<Obj> list) {
         int count = 0;
         int count2 = 0;
@@ -183,15 +209,15 @@ public class Assignment02 {
     }
 
     public static void main(String[] args) {
-        String MyFile = "Registered_Business_Locations_-_San_Francisco.csv";
-        String type = "LL";
+        String MyFile = args[0];
+        String type = args[1];
         Deque<String> queue = new ArrayDeque<>();
         if (MyFile != null) {
-            if (type == "AL") {
+            if (Objects.equals(type, "AL")) {
                 List<Obj> aList = new ArrayList<>();
                 aList = ReadFileAL(MyFile);
                 UserIn(aList, queue);
-            } else if (type == "LL") {
+            } else if (Objects.equals(type, "LL")) {
                 List<Obj> lList = new LinkedList<>();
                 lList = ReadFileLL(MyFile);
                 UserIn(lList, queue);
