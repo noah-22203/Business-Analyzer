@@ -3,10 +3,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.ListIterator;
-import java.util.Objects;
-
+import java.util.Queue;
+import java.util.*;
 
 public class Assignment02 {
     public static ArrayList<Obj> ReadFileAL(String MyFile) {
@@ -30,11 +28,12 @@ public class Assignment02 {
                 entry.setHood(tag[23]);
                 entry.setType(tag[17]);
                 entry.setsDate(tag[8]);
-                entry.setOpen(Objects.equals(tag[9], ""));
-                if (!entry.getZip().equals("") && !entry.getNAICS().equals("") &&
-                        !entry.getHood().equals("") && !entry.getType().equals("") && !entry.getsDate().equals("")) {
-                    tags.add(entry);
+                if (tag[9].equals("")) {
+                    entry.setOpen(true);
+                } else {
+                    entry.setOpen(false);
                 }
+                tags.add(entry);
             }
         } catch (IOException ex) { //handle an exception here
             ex.printStackTrace();
@@ -62,11 +61,12 @@ public class Assignment02 {
                 entry.setHood(tag[23]);
                 entry.setType(tag[17]);
                 entry.setsDate(tag[8]);
-                entry.setOpen(Objects.equals(tag[9], ""));
-                if (!entry.getZip().equals("") && !entry.getNAICS().equals("") &&
-                        !entry.getHood().equals("") && !entry.getType().equals("") && !entry.getsDate().equals("")) {
-                            tags.add(entry);
-                        }
+                if (tag[9].equals("")) {
+                    entry.setOpen(true);
+                } else {
+                    entry.setOpen(false);
+                }
+                tags.add(entry);
             }
         } catch (IOException ex) { //handle an exception here
             ex.printStackTrace();
@@ -74,31 +74,62 @@ public class Assignment02 {
         return tags;
     }
 
-    public static boolean UserIn() {
-
+    public static boolean UserIn(List<Obj> list, Deque<String> queue) {
+        Scanner sc = new Scanner(System.in);
+        String in = "";
+        String[] line = null;
+        System.out.println("enter commands, or enter EXIT to exit");
+        in = sc.nextLine();
+        queue.add(in);
+        while (!in.equals("EXIT")) {
+            if (in.contains("Zip")) {
+                line = in.split(" ");
+                String zip = line[1];
+                zipSum(zip, list);
+                UserIn(list, queue);
+            } else if (in.contains("NAICS")) {
+                line = in.split(" ");
+                String naics = line[1];
+                naicsSum(naics, list);
+                UserIn(list, queue);
+            } else if (in.contains("Summary")) {
+                sumSum(list);
+                UserIn(list, queue);
+            } else if (in.contains("History")) {
+                for (String element : queue) {
+                    System.out.println(element);
+                }
+                UserIn(list, queue);
+            } else {
+                System.out.println("enter a valid command!");
+                UserIn(list, queue);
+            }
+            return false;
+        }
         return false;
     }
 
     public static void naicsSum(String naics, List<Obj> list) {
         int count = 0;
-        int lo = 0;
-        int hi = 0;
-        String[] two = null;
-        int naicNum = Integer.parseInt(naics);
         HashSet<String> zips = new HashSet<String>();
         HashSet<String> hoods = new HashSet<String>();
         Iterator<Obj> iterator = list.Iterator();
+        int naic = Integer.parseInt(naics);
         while(iterator.hasNext()) {
             Obj item = iterator.next();
-            String inaics = item.getNAICS();
-            two = inaics.split("-");
-
-            lo = Integer.parseInt(two[0]);
-            hi = Integer.parseInt(two[1]);
-            if (naicNum > lo && naicNum < hi) {
-                zips.add(item.getZip());
-                zips.add(item.getHood());
-                count++;
+            String nrange = item.getNAICS();
+            String[] mult = nrange.split(" ");
+            for (int i = 0; i < mult.length; i++) {
+                String[] two = mult[i].split("-");
+                if (!two[0].equals("")) {
+                    String lo = two[0];
+                    String hi = two[1];
+                    if (naic <= Integer.parseInt(hi) && naic >= Integer.parseInt(lo)) {
+                        zips.add(item.getZip());
+                        hoods.add(item.getHood());
+                        count++;
+                    }
+                }
             }
         }
 
@@ -141,7 +172,7 @@ public class Assignment02 {
             String date = item.getsDate();
             year = date.split("/");
             int theYear = Integer.parseInt(year[2]);
-            if (theYear < current-1) {
+            if (current - theYear < 2) {
                 count2++;
             }
         }
@@ -151,29 +182,19 @@ public class Assignment02 {
         System.out.println("New Business in last year: " + count2);
     }
 
-
-
-
-
-
     public static void main(String[] args) {
         String MyFile = "Registered_Business_Locations_-_San_Francisco.csv";
         String type = "LL";
-        String zip = "94108";
-        String naic = "2530";
+        Deque<String> queue = new ArrayDeque<>();
         if (MyFile != null) {
             if (type == "AL") {
                 List<Obj> aList = new ArrayList<>();
                 aList = ReadFileAL(MyFile);
-                zipSum(zip, aList);
-                sumSum(aList);
-                naicsSum(naic, aList);
+                UserIn(aList, queue);
             } else if (type == "LL") {
                 List<Obj> lList = new LinkedList<>();
                 lList = ReadFileLL(MyFile);
-                zipSum(zip, lList);
-                sumSum(lList);
-                naicsSum(naic, lList);
+                UserIn(lList, queue);
             } else {
                 System.out.println("enter a valid list type");
             }

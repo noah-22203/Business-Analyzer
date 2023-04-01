@@ -3,7 +3,7 @@ public class Obj {
     private String NAICS;
     private String hood;
     private String type;
-    private boolean open;
+    private Boolean open;
     private String sDate;
 
     public void setsDate(String sDate) {
@@ -45,11 +45,11 @@ public class Obj {
         return hood;
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(Boolean open) {
         this.open = open;
     }
 
-    public boolean isOpen() {
+    public Boolean isOpen() {
         return open;
     }
 
